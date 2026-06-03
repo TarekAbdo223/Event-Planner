@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
-import { NeonAuthUIProvider } from "@neondatabase/auth/react";
+import { NeonAuthUIProvider, UserButton } from "@neondatabase/auth/react";
 import { authClient } from "@/lib/auth/client";
 
 const geistSans = Geist({
@@ -31,8 +31,10 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-[var(--background)]">
-        <NeonAuthUIProvider authClient={authClient as any}>
-          {/* this will give us access to components we can use || also the styles we can use */}
+        <NeonAuthUIProvider
+          authClient={authClient as Parameters<typeof NeonAuthUIProvider>[0]["authClient"]}
+          redirectTo="/dashboard"
+        >
           <header className="border-b border-[var(--border)]">
             <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between">
               <Link href={"/"}>Event Planner</Link>
@@ -43,14 +45,15 @@ export default function RootLayout({
                 >
                   Dashboard
                 </Link>
+                <UserButton size="icon" />
               </nav>
             </div>
           </header>
-        </NeonAuthUIProvider>
 
-        <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col px-4 py-8">
-          {children}
-        </main>
+          <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col px-4 py-8">
+            {children}
+          </main>
+        </NeonAuthUIProvider>
       </body>
     </html>
   );
